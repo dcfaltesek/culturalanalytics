@@ -1,5 +1,6 @@
 #our football program
 library(stringr)
+library(rvest)
 
 #get the data
 feetball<-"https://www.sports-reference.com/cfb/years/2018-schedule.html"
