@@ -7,7 +7,7 @@
 #these pipes are powerful and the documentation is less than awesome
 #network and sna are old packages from before this new wave of popularity for R
 library(rvest)
-library(dpyr)
+library(dplyr)
 library(ggplot2)
 library(network)
 library(sna)
@@ -69,19 +69,19 @@ C<-ggnetwork(n, layout = "eigen")
 
 
 # just nodes
-ggplot(JJ, aes(x, y)) +
-  geom_nodes(size = 3, shape = 21, color = "steelblue") +
+ggplot(J, aes(x, y)) +
+  geom_nodes(size = 3, shape = 8, color = "pink") +
   theme_blank()
 
 # with edges
 ggplot(n, aes(x, y, xend = xend, yend = yend)) +
-  geom_edges(color = "steelblue") +
+  geom_edges(color = "orange") +
   geom_nodes(size = 3, shape = 21, color = "steelblue", fill = "white") +
   theme_blank()
 
 ggplot(n, aes(x, y, xend = xend, yend = yend)) +
-  geom_edges(color = "grey50") +
-  geom_nodes(size = degree(n), aes(color = bonpow), size = hierarchy) +
+  geom_edges(color = "orange") +
+  geom_nodes(size = degree(n), aes(color = bonpow)) +
   scale_color_gradient(low = "gold", high = "tomato") +
   geom_nodetext_repel(aes(label = vertex.names, size = closeness))+
   theme_blank() +
@@ -90,7 +90,7 @@ ggplot(n, aes(x, y, xend = xend, yend = yend)) +
 
 ggplot(n, aes(x, y, xend = xend, yend = yend)) +
   geom_edges(aes(linetype = score), color = "grey50") +
-  geom_nodes(size = degree(n), aes(color = kcores), size = closeness) +
+  geom_nodes(size = log(degree(n)), aes(shape = conference, color = kcores)) +
   geom_nodetext_repel(aes(label = vertex.names, size = closeness))+
   theme_blank() +
   theme(legend.position = "bottom")
