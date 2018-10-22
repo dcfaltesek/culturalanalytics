@@ -1,6 +1,7 @@
 library(rvest)
 library(reshape2)
 library(stringr)
+library(dplyr)
 
 kafka_home<-read_html("http://franzkafkastories.com/shortStories.php")
 
@@ -28,7 +29,7 @@ D <- "\')"
 Z<-str_replace_all(kafka_titles, " ", "")
 Z<-str_replace_all(Z, "'", "")
 Z<-str_replace_all(Z, "-", "")
-
+Y<-"<-"
 
 #store as an intermediate dataframe just in case and for checking 
 kafka_read<-tibble(Z, Y, A, B, C, D)
@@ -54,9 +55,7 @@ eval(parse(text = kafka_fulltext))
 TheJudgment_text<-str_replace_all(TheJudgment_text, "\n", "")
 TheJudgment_text<-str_replace_all(TheJudgment_text, "\t\t\t", "")
 
-#for ease, let's see if we can use single quotes for string replacement
-Unhappiness_text<-str_replace_all(Unhappiness_text, '\t\t\t', '')
-Unhappiness_text
+
 
 
 
@@ -75,13 +74,72 @@ eval(parse(text = cleaner_code))
 
 
 #now lets go ahead and pick some datasets
-Clothes<-data.frame(Clothes_text)
-Clothes<-mutate(Clothes, "paragraph" = 1:4)
-Clothes<-mutate(Clothes, "story" = "Clothes")
-filter(Clothes, 1:3)
 
+#here are ten
 AbsentmindedWindowgazing_text
 Rejection_text
 Resolutions_text
 OntheTram_text
 Passersby_text
+Clothes_text
+BachelorsIllLuck_text
+ReflectionsforGentlemenjockeys_text
+TheWayHome_text
+UnmaskingaConfidenceTrickster_text
+
+#refactor key variables to make it easier
+parser<-paste(Z,"<-",Z,"_text", sep = "")
+writeLines(parser)
+eval(parse(text=parser))
+
+parser<-paste(Z,"<-","data.frame(",Z,")", sep = "") 
+writeLines(parser)
+eval(parse(text = parser))
+
+writeLines(Z)
+
+UnmaskingaConfidenceTrickster<-mutate(UnmaskingaConfidenceTrickster, story = "unmasking a confidence trickster")
+Resolutions<-mutate(Resolutions, story = "resolutions")
+BachelorsIllLuck<-mutate(BachelorsIllLuck, story = "bachelors ill luck")
+AbsentmindedWindowgazing<-mutate(AbsentmindedWindowgazing, story = "AbsentmindedWindowgazing")
+TheWayHome<-mutate(TheWayHome, story = "the way home")
+Passersby<-mutate(Passersby, story = "passerby")
+OntheTram<-mutate(OntheTram, story="on the tram")
+Clothes<-mutate(Clothes, story="clothes")
+Rejection<-mutate(Rejection, story="rejection")
+
+parser<-paste(Z,"<-rename(",Z, ",", "text=", Z,")", sep = "")
+writeLines(parser)
+eval(parse(text = parser))
+
+parser<-paste(Z,"<-","data.frame(",Z,")", sep = "") 
+writeLines(parser)
+eval(parse(text = parser))
+
+parser<-paste(Z, "<- ",Z, "%>% mutate(paragraph = row_number())", sep="")
+writeLines(parser)
+eval(parse(text = parser))
+
+parser<-paste(Z,"<-","data.frame(",Z,")", sep = "") 
+writeLines(parser)
+eval(parse(text = parser))
+      
+#some of the lines didn't work, and that is cool
+X<-bind_rows(
+  UnmaskingaConfidenceTrickster,
+  Resolutions,
+  BachelorsIllLuck,
+  AbsentmindedWindowgazing,
+  TheWayHome,
+  Passersby,
+  OntheTram,
+  Clothes,
+  Rejection
+)
+
+View(X)
+     
+#now a complete corpus
+Kafka<-filter(X, text != "Back to Franz Kafka stories index.")
+write.csv(Kafka, "Kafka.csv")
+

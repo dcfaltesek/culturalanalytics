@@ -10,7 +10,9 @@ library(tidyr)
 #http://www.angelfire.com/mi4/malldirectories/wheel/wheelbonus.html
 
 #this will end up being really handy, a vector of letters
-LETTERS<-c("A","B",'C','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
+LETTERS<-c("A","B",'C','D', 'E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
+
+Wheel<-counted_wheel
 
 #get a mess of features
 PUZZLE_features<-textfeatures(Wheel$PUZZLE)
@@ -33,6 +35,7 @@ LETTER_counts<-bind_cols(
 A,
 B,
 C,
+D,
 E,
 F,
 G,
@@ -71,6 +74,7 @@ LETTER_countsB<-bind_cols(
   A,
   B,
   C,
+  D,
   E,
   F,
   G,
@@ -99,6 +103,7 @@ LETTER_countsB<-bind_cols(
 
 #full wheel
 View(LETTER_countsB)
+View(LETTER_counts)
 Counts<-bind_cols(LETTER_counts, LETTER_countsB)
 FullWheel<-bind_cols(FullWheel, Counts)
 FullWheel<-bind_cols(FullWheel, PUZZLE_features)
@@ -120,5 +125,178 @@ str_view_all(FullWheel$PUZZLE, "A$")
 
 
 #time for some dplyr
-summarise_each(FullWheel, funs(mean))
+need<-summarise_each(LETTER_counts, funs(mean))
+want<-summarise_each(LETTER_countsB, funs(mean))
+as_tibble(need-want)
+sum<-(need-want)
+data.frame(sum)
+
+View(Wheel)
+numb<-1:377
+FullWheel<-mutate(Wheel, "numb" = numb)
+
+ggplot(FullWheel, aes(x = numb, y = D))+geom_line()
+
+beef<-paste(LETTERS,"<-sum(FullWheel$", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+beef<-paste(LETTERS,"<-data.frame(", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+sumCounts<-bind_cols(
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  H,
+  I,
+  J,
+  K,
+  L,
+  M,
+  N,
+  O,
+  P,
+  Q,
+  R,
+  S,
+  T,
+  U,
+  V,
+  W,
+  X,
+  Y,
+  Z)
+View(sumCounts)
+
+beef<-paste(LETTERS,"<-sum(FullWheel$", LETTERS, "b)", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+beef<-paste(LETTERS,"<-data.frame(", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+sumCountsB<-bind_cols(
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  H,
+  I,
+  J,
+  K,
+  L,
+  M,
+  N,
+  O,
+  P,
+  Q,
+  R,
+  S,
+  T,
+  U,
+  V,
+  W,
+  X,
+  Y,
+  Z)
+View(sumCountsB)
+sumCounts-sumCountsB
+
+beef<-paste(LETTERS,"<-mean(FullWheel$", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+beef<-paste(LETTERS,"<-data.frame(", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+meanCounts<-bind_cols(
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  H,
+  I,
+  J,
+  K,
+  L,
+  M,
+  N,
+  O,
+  P,
+  Q,
+  R,
+  S,
+  T,
+  U,
+  V,
+  W,
+  X,
+  Y,
+  Z)
+
+beef<-paste(LETTERS,"<-mean(FullWheel$", LETTERS,"b)", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+beef<-paste(LETTERS,"<-data.frame(", LETTERS,")", sep = "")
+writeLines(beef)
+eval(parse(text = beef))
+
+meanCountsB<-bind_cols(
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  H,
+  I,
+  J,
+  K,
+  L,
+  M,
+  N,
+  O,
+  P,
+  Q,
+  R,
+  S,
+  T,
+  U,
+  V,
+  W,
+  X,
+  Y,
+  Z)
+
+#average appearance per day - average request
+select(meanCounts, -c(R,S,T,L,N,E))-select(meanCountsB, -c(R,S,T,L,N,E))
+
+#compare useage versus mean usage
+sumCounts
+meanCounts
+gather_(sumCounts)
+library(tidyr)
+library(reshape2)
+
+J<-melt(sumCounts)
+K<-melt(meanCounts)
+L<-melt(sumCountsB)
+P<-melt(meanCountsB)
+Q <- data.frame(J,K,L,P)
 
