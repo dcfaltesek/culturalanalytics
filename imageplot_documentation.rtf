@@ -1,0 +1,89 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red249\green249\blue249;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c98039\c98039\c98039;}
+\margl1440\margr1440\vieww12500\viewh13260\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 #this is not an R script, it is a text file written in that style to facilitate understanding\
+\
+#This method will utilize software called ImageJ, currently deployed through Fiji\
+\
+1. Secure images in a single location, in this case /Users/danielfaltesek/desktop/kinkade\
+\
+\
+2. Two Methods\
+A. Run qtip on said images\
+This will produce a CSV which does two things:\
+i. produces a reference file of measurements\
+ii. produces a concise list of file names \
+\
+B. Import the image folder (in this case \'93pictures\'94) into ImageJ\
+file>import>image sequence\
+In the dialog, import as a \'93virtual stack\'94\
+Measurements can be created by\
+Analyze>Set Measurements\
+In the dialog, set all desired measures \
+Process>Batch>Measure\
+Save the results (produces an old excel file, .xls)\
+\
+3. Modify the CSV, either use excel and delete the SECOND row or use R, \
+Method for R: my data<-mydata[-c(2,),]\
+OR use the dplyr method \
+paint<-slice(painting, 2:7)\
+\
+4. Image J - run macro, Image Plot\
+\
+5. Both selections should be to open; since you have used QTip, your data structure will be easily integrated into the program\
+\
+6. Run plugin; this is where things get annoying. Your DATA NEEDS TO BE IN A TXT (tab delimited)\
+A. Excel is a fine can opener\
+B. If you want to use R, which at this point, why not? \
+\pard\pardeftab720\sl320\partightenfactor0
+
+\f1\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 write.table(mydata, "mydata.txt", sep=\'93\\t\'94, row.names=FALSE)
+\f0\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+run macro -> select file -> open the txt -> select options\
+\
+7. View basic image plot - the issue then becomes, how do we interpret the information that we have found? \
+\
+8. Check the data dictionary \
+\
+9. Color Thresholding and Particle Detection are Easily Possible\
+\
+Cool Outputs\
+stk>make montage\
+3dproject\
+\
+Radials Orthagonals\
+\
+5D VIEWER\
+plugins>analyze>cell counter\
+\
+Color Inspector 3d\
+\
+MONTAGE IS UP AND RUNNING\
+TAB DELIMTED TEXT IS KEY\
+\
+Image Montage\
+\
+BEST METHOD\
+Call the files directly in the sheet\
+\
+1. Make measurement\
+2. Add levels \
+3. BE SURE TO SAVE AS TXT (tab delimited text)\
+\
+L-measure can do neurons (what data structure does that look like?\
+VAIS aligns stacks of images\
+\
+\
+Image>type\
+process - watershed OR another threshold method\
+analysis>analyze particles \
+\
+}
